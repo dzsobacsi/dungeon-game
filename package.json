@@ -1,0 +1,22 @@
+{
+  "name": "dungeon-game",
+  "version": "1.0.0",
+  "description": "fcc dungeon crawler game project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dzsobacsi/dungeon-game.git"
+  },
+  "keywords": [
+    "fcc"
+  ],
+  "author": "dzsobacsi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dzsobacsi/dungeon-game/issues"
+  },
+  "homepage": "https://github.com/dzsobacsi/dungeon-game#readme"
+}

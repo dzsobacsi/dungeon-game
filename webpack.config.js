@@ -8,7 +8,7 @@ module.exports = {
   ],
   output: {
     path: __dirname + '/dist',
-    pubicPath: '/',
+    pubicPath: 'http://localhost:8080/',
     filename: 'bundle.js'
   },
   module: {
@@ -16,10 +16,10 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'react-hot!babel'
+        loaders: ['react-hot', 'jsx', 'babel']
       }, {
-        test: /\.css$/,
-        loader: 'style!css'
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass']
       }
     ]
   },
@@ -27,10 +27,10 @@ module.exports = {
     extensions: ['', '.js']
   },
   devServer: {
-    contentBase: './dist',
+    contentBase: '.',
     hot: true
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin() // Wire in the hot loading plugin
-  ]
+  }
+  //plugins: [
+  //  new webpack.HotModuleReplacementPlugin() // Wire in the hot loading plugin
+  //]
 };

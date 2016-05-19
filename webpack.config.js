@@ -2,35 +2,34 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: [
-    'webpack-dev-server/client?http://localhost:8080', // Setting the URL for the hot reload
-    'webpack/hot/only-dev-server', // Reload only the dev server
+    'webpack-dev-server/client?http://localhost:8080',
+    'webpack/hot/only-dev-server',
     './src/index.js'
   ],
   output: {
-    path: __dirname + '/dist',
-    pubicPath: 'http://localhost:8080/',
-    filename: 'bundle.js'
+    filename: 'public/bundle.js'
   },
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loaders: ['react-hot', 'jsx', 'babel']
+        loaders: ['react-hot', 'babel']
       }, {
-        test: /\.scss$/,
-        loaders: ['style', 'css', 'sass']
+        test: /\.sass$/,
+        loaders: ['style', 'css', 'sass'],
+        exclude: /node_modules/
       }
     ]
   },
-  resolve: {
-    extensions: ['', '.js']
-  },
-  devServer: {
-    contentBase: '.',
-    hot: true
-  }
-  //plugins: [
-  //  new webpack.HotModuleReplacementPlugin() // Wire in the hot loading plugin
-  //]
+  // resolve: {
+  //   extensions: ['', '.js']
+  // },
+  // devServer: {
+  //   contentBase: '.',
+  //   hot: true
+  // }
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ]
 };

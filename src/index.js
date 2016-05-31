@@ -1,1 +1,7 @@
-document.getElementsByTagName("h1")[0].textContent = "wooooow"
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './components/App'
+
+ReactDOM.render(<App />, document.getElementById("app"))
+
+console.log("index");

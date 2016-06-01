@@ -1,4 +1,4 @@
-const SIZE = 60 //This should be the same as $grid-size in the CSS
+const SIZE = 50 //This should be the same as $grid-size in the CSS
 
 let createEmptyBitmap = function(size) {
   let bmp = new Array(size)
@@ -19,7 +19,7 @@ let copyBitmap = function(bmp) {
   )
 }
 
-let initialBitmap = function(size) {
+let zeroBitmap = function(size) {
   let bmp = createEmptyBitmap(size)
   for (let i=0; i<size; i++) {
     for (let j=0; j<size; j++) {
@@ -29,27 +29,47 @@ let initialBitmap = function(size) {
   return bmp
 }
 
-let addNewRandomRoom = function(bmp) {
-  let newBmp = copyBitmap(bmp)
-  let x = Math.floor(Math.random()*(SIZE-11))+1
-  let y = Math.floor(Math.random()*(SIZE-11))+1
-  let w = Math.floor(Math.random()*8)+4
-  let h = Math.floor(Math.random()*8)+4
-  for (let i = y; i < y+h; i++) {
-    for (let j = x; j < x+w; j++) {
-      newBmp[i][j] = 1
+let randomRoom = function(minsize, maxsize) {
+  let x = Math.floor(Math.random() * (SIZE - maxsize)) + 1
+  let y = Math.floor(Math.random() * (SIZE - maxsize)) + 1
+  let w = Math.floor(Math.random() * (maxsize - minsize + 1)) + minsize
+  let h = Math.floor(Math.random() * (maxsize - minsize + 1)) + minsize
+  return {x, y, w, h}
+}
+
+let areTheyOverlap = function(r1, r2) {
+  //returns true even if they just touch each other
+  let isPointInR2 = function(x, y) {
+    if (x >= r2.x && x <= r2.x + r2.w && y >= r2.y && y <= r2.y + r2.h) return true
+    else return false
+  }
+  for (let i = r1.x; i <= r1.x + r1.w; i++) {
+    for (let j = r1.y; j <= r1.y + r1.h; j++) {
+      if (isPointInR2(i, j)) return true
     }
   }
-  return newBmp
+  return false
 }
 
-let dungeon = function(size) {
-  let dg = initialBitmap(SIZE)
-  let dg2 = addNewRandomRoom(dg)
-  let dg3 = addNewRandomRoom(dg2)
-  let dg4 = addNewRandomRoom(dg3)
-  console.log("a dungeon is returned");
-  return dg4
+let createDungeon = function(size) {
+  let rooms = []
+  for (let i = 0; i < 5; i++) {
+    let newRoom = randomRoom(4, 10)
+    for (let j = 0; j < rooms.length; j++) {
+      if (areTheyOverlap(rooms[j], newRoom)) console.log("overlapping rooms!", i, j);
+    }
+    rooms.push(newRoom)
+  }
+  let dg = zeroBitmap(size)
+  for (let i = 0; i < rooms.length; i++) {
+    console.log(i, ": ", rooms[i]);
+    for (let j = rooms[i].x; j < rooms[i].x + rooms[i].w; j++) {
+      for (let k = rooms[i].y; k < rooms[i].y + rooms[i].h; k++) {
+        dg[k][j] = 1
+      }
+    }
+  }
+  return dg
 }
 
-export {SIZE, dungeon}
+export default createDungeon(SIZE)

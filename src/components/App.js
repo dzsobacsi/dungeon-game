@@ -2,12 +2,12 @@
 require('../../css/main.sass')
 import React from 'react'
 import Grid from './Grid'
-import {SIZE, dungeon} from '../dungeon'
+import dungeon from '../dungeon'
 
 let App = React.createClass({
   getDefaultProps: function() {
     return {
-      bitmap: dungeon(SIZE)
+      bitmap: dungeon
     }
   },
 

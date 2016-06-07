@@ -141,6 +141,50 @@ let digDoor = function(bmp, {drx, dry}) {
   return newBmp
 }
 
+let newCoord = function(drx, dry, direction, distance) {
+  let xx, yy
+  switch (direction) {
+    case 0:            //North
+      xx = drx
+      yy = dry - distance
+      break;
+    case 1:            //East
+      xx = drx + distance
+      yy = dry
+      break;
+    case 2:            //South
+      xx = drx
+      yy = dry + distance
+      break;
+    case 3:            //West
+      xx = drx - distance
+      yy = dry
+      break;
+  }
+  return {x: xx, y: yy}
+}
+
+let isTunnelOK = function(mapsize, dg, {drx, dry, wall}) {
+  for (let i = 1; i < 10; i++) {
+    let coord = newCoord(drx, dry, wall, i)
+    let {x, y} = coord
+    if (x < 1 || y < 1 || x >= mapsize - 1 || y >= mapsize - 1) return {OK: false}
+    if (dg[y][x] === 2) return {OK: false}
+    if (dg[y][x] === 1) return {OK: true, length: i-1}
+  }
+  return {OK: false}
+}
+
+let digTunnel = function(bmp, length, {drx, dry, wall}) {
+  let newBmp = copyBitmap(bmp)
+  for (let i = 1; i <= length; i++) {
+    let coord = newCoord(drx, dry, wall, i)
+    let {x, y} = coord
+    newBmp[y][x] = 2
+  }
+  return newBmp
+}
+
 let createDungeon = function(size, numberOfRooms) {
   let rooms = []
   let nrRooms = 1
@@ -161,6 +205,20 @@ let createDungeon = function(size, numberOfRooms) {
     }
   }
   console.log(rooms)
+  let nrTunnels = 0
+  while (nrTunnels < 4) {
+    let door = randomDoor(rooms)
+    if (!rooms[door.roomIndex].doors.includes(door.wall)) {
+      // if there is not yet any door on the wall where the new door is generated
+      let newTunnel = isTunnelOK(size, dg, door)
+      if (newTunnel.OK) {
+        rooms[door.roomIndex].doors.push(door.wall)
+        dg = digDoor(dg, door)
+        dg = digTunnel(dg, newTunnel.length, door)
+        nrTunnels++
+      }
+    }
+  }
   return dg
 }
 

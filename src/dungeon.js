@@ -1,4 +1,5 @@
-const SIZE = 50 //This should be the same as $grid-size in the CSS
+const MAPSIZE = 50 //This should be the same as $grid-size in the CSS
+const NUMBER_OF_ROOMS = 15
 
 let createEmptyBitmap = function(size) {
   let bmp = new Array(size)
@@ -33,10 +34,11 @@ let randomInteger = (min, max) => Math.floor(
   Math.random() * (max - min + 1) + min
 )
 
-let randomRoom = function(door, minsize=4, maxsize=10) {
+let randomRoom = function(mapsize, door, minsize=6, maxsize=12) {
   let x, y
   let w = randomInteger(minsize, maxsize)
   let h = randomInteger(minsize, maxsize)
+  let doors = []
   if (door) {
     let {drx, dry, wall: dir} = door
     switch (dir) {
@@ -59,10 +61,10 @@ let randomRoom = function(door, minsize=4, maxsize=10) {
     }
   }
   else {
-    x = randomInteger(0, SIZE-maxsize)
-    y = randomInteger(0, SIZE-maxsize)
+    x = randomInteger(0, mapsize-maxsize)
+    y = randomInteger(0, mapsize-maxsize)
   }
-  return {x, y, w, h}
+  return {x, y, w, h, doors}
 }
 
 let areTheyOverlap = function(r1, r2) {
@@ -79,9 +81,9 @@ let areTheyOverlap = function(r1, r2) {
   return false
 }
 
-let isRoomOK = function(rooms, {x, y, w, h}) {
+let isRoomOK = function(mapsize, rooms, {x, y, w, h}) {
   //receives a rooms array and a room object as the new room
-  if (x < 1 || y < 1 || x > SIZE - w - 1 || y > SIZE - h - 1) return false
+  if (x < 1 || y < 1 || x > mapsize - w - 1 || y > mapsize - h - 1) return false
   for (let rm of rooms) {
     if (areTheyOverlap(rm, {x, y, w, h})) return false
   }
@@ -129,7 +131,7 @@ let randomDoor = function(rooms) {
       break;
   }
   //console.log({roomIndex, wall, brick, x, y})
-  return {drx, dry, wall}
+  return {drx, dry, roomIndex, wall}
 }
 
 let digDoor = function(bmp, {drx, dry}) {
@@ -139,22 +141,27 @@ let digDoor = function(bmp, {drx, dry}) {
   return newBmp
 }
 
-let createDungeon = function(size) {
+let createDungeon = function(size, numberOfRooms) {
   let rooms = []
+  let nrRooms = 1
   let dg = zeroBitmap(size)
-  let firstRoom = randomRoom()
+  let firstRoom = randomRoom(size)
   rooms.push(firstRoom)
   dg = digRoom(dg, firstRoom)
-  for (let i = 0; i < 1000; i++) {
+  while (nrRooms < numberOfRooms) {
     let door = randomDoor(rooms)
-    let newRoom = randomRoom(door)
-    if (isRoomOK(rooms, newRoom)) {
+    let newRoom = randomRoom(size, door)
+    if (isRoomOK(size, rooms, newRoom)) {
+      rooms[door.roomIndex].doors.push(door.wall)
+      newRoom.doors.push((door.wall + 2) % 4)
       rooms.push(newRoom)
       dg = digDoor(dg, door)
       dg = digRoom(dg, newRoom)
+      nrRooms++
     }
   }
+  console.log(rooms)
   return dg
 }
 
-export default createDungeon(SIZE)
+export default createDungeon(MAPSIZE, NUMBER_OF_ROOMS)

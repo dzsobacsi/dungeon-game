@@ -1,5 +1,6 @@
 const MAPSIZE = 50 //This should be the same as $grid-size in the CSS
 const NUMBER_OF_ROOMS = 15
+const NUMBER_OF_TUNNELS = 4
 
 let createEmptyBitmap = function(size) {
   let bmp = new Array(size)
@@ -65,6 +66,13 @@ let randomRoom = function(mapsize, door, minsize=6, maxsize=12) {
     y = randomInteger(0, mapsize-maxsize)
   }
   return {x, y, w, h, doors}
+}
+
+let isPointInRoom = function(xx, yy, {x, y, w, h}) {
+  // xx and yy are the point coordinates to be checked
+  // {x, y, w, h} specifies a room object
+  if (xx >= x && xx < x+w && yy >= y && yy < y+h) return true
+  else return false
 }
 
 let areTheyOverlap = function(r1, r2) {
@@ -164,13 +172,19 @@ let newCoord = function(drx, dry, direction, distance) {
   return {x: xx, y: yy}
 }
 
-let isTunnelOK = function(mapsize, dg, {drx, dry, wall}) {
-  for (let i = 1; i < 10; i++) {
+let randomTunnel = function(mapsize, dg, rooms, {drx, dry, wall}) {
+  for (let i = 1; i <= 10; i++) {
     let coord = newCoord(drx, dry, wall, i)
     let {x, y} = coord
     if (x < 1 || y < 1 || x >= mapsize - 1 || y >= mapsize - 1) return {OK: false}
     if (dg[y][x] === 2) return {OK: false}
-    if (dg[y][x] === 1) return {OK: true, length: i-1}
+    if (dg[y][x] === 1) {
+      return {
+        OK: true,
+        length: i-1,
+        end: rooms.findIndex(rm => isPointInRoom(x, y, rm))
+      }
+    }
   }
   return {OK: false}
 }
@@ -185,7 +199,7 @@ let digTunnel = function(bmp, length, {drx, dry, wall}) {
   return newBmp
 }
 
-let createDungeon = function(size, numberOfRooms) {
+let createDungeon = function(size, numberOfRooms, numberOfTunnels) {
   let rooms = []
   let nrRooms = 1
   let dg = zeroBitmap(size)
@@ -206,13 +220,14 @@ let createDungeon = function(size, numberOfRooms) {
   }
   console.log(rooms)
   let nrTunnels = 0
-  while (nrTunnels < 4) {
+  while (nrTunnels < numberOfTunnels) {
     let door = randomDoor(rooms)
     if (!rooms[door.roomIndex].doors.includes(door.wall)) {
       // if there is not yet any door on the wall where the new door is generated
-      let newTunnel = isTunnelOK(size, dg, door)
+      let newTunnel = randomTunnel(size, dg, rooms, door)
       if (newTunnel.OK) {
         rooms[door.roomIndex].doors.push(door.wall)
+        rooms[newTunnel.end].doors.push((door.wall + 2) % 4)
         dg = digDoor(dg, door)
         dg = digTunnel(dg, newTunnel.length, door)
         nrTunnels++
@@ -222,4 +237,4 @@ let createDungeon = function(size, numberOfRooms) {
   return dg
 }
 
-export default createDungeon(MAPSIZE, NUMBER_OF_ROOMS)
+export default createDungeon(MAPSIZE, NUMBER_OF_ROOMS, NUMBER_OF_TUNNELS)

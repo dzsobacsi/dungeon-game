@@ -1,8 +1,4 @@
-const MAPSIZE = 50 //This should be the same as $grid-size in the CSS
-const NUMBER_OF_ROOMS = 15
-const NUMBER_OF_TUNNELS = 4
-
-let createEmptyBitmap = function(size) {
+const createEmptyBitmap = function(size) {
   let bmp = new Array(size)
     for (let i=0; i<size; i++) {
       bmp[i] = new Array(size)
@@ -15,13 +11,13 @@ let createEmptyBitmap = function(size) {
   return bmp
 }
 
-let copyBitmap = function(bmp) {
+const copyBitmap = function(bmp) {
   return bmp.map(
     row => row.slice()
   )
 }
 
-let zeroBitmap = function(size) {
+const zeroBitmap = function(size) {
   let bmp = createEmptyBitmap(size)
   for (let i=0; i<size; i++) {
     for (let j=0; j<size; j++) {
@@ -31,11 +27,11 @@ let zeroBitmap = function(size) {
   return bmp
 }
 
-let randomInteger = (min, max) => Math.floor(
+const randomInteger = (min, max) => Math.floor(
   Math.random() * (max - min + 1) + min
 )
 
-let randomRoom = function(mapsize, door, minsize=6, maxsize=12) {
+const randomRoom = function(mapsize, door, minsize=6, maxsize=12) {
   let x, y
   let w = randomInteger(minsize, maxsize)
   let h = randomInteger(minsize, maxsize)
@@ -62,22 +58,22 @@ let randomRoom = function(mapsize, door, minsize=6, maxsize=12) {
     }
   }
   else {
-    x = randomInteger(0, mapsize-maxsize)
-    y = randomInteger(0, mapsize-maxsize)
+    x = randomInteger(1, mapsize-maxsize)
+    y = randomInteger(1, mapsize-maxsize)
   }
   return {x, y, w, h, doors}
 }
 
-let isPointInRoom = function(xx, yy, {x, y, w, h}) {
+const isPointInRoom = function(xx, yy, {x, y, w, h}) {
   // xx and yy are the point coordinates to be checked
   // {x, y, w, h} specifies a room object
   if (xx >= x && xx < x+w && yy >= y && yy < y+h) return true
   else return false
 }
 
-let areTheyOverlap = function(r1, r2) {
+const areTheyOverlap = function(r1, r2) {
   //returns true even if they just touch each other
-  let isPointInR2 = function(x, y) {
+  const isPointInR2 = function(x, y) {
     if (x >= r2.x && x <= r2.x + r2.w && y >= r2.y && y <= r2.y + r2.h) return true
     else return false
   }
@@ -89,7 +85,7 @@ let areTheyOverlap = function(r1, r2) {
   return false
 }
 
-let isRoomOK = function(mapsize, rooms, {x, y, w, h}) {
+const isRoomOK = function(mapsize, rooms, {x, y, w, h}) {
   //receives a rooms array and a room object as the new room
   if (x < 1 || y < 1 || x > mapsize - w - 1 || y > mapsize - h - 1) return false
   for (let rm of rooms) {
@@ -98,7 +94,7 @@ let isRoomOK = function(mapsize, rooms, {x, y, w, h}) {
   return true
 }
 
-let digRoom = function(bmp, {x, y, w, h}) {
+const digRoom = function(bmp, {x, y, w, h}) {
   //receives a bmp and a room object
   let newBmp = copyBitmap(bmp)
   for (let i = x; i < x + w; i++) {
@@ -109,7 +105,7 @@ let digRoom = function(bmp, {x, y, w, h}) {
   return newBmp
 }
 
-let randomDoor = function(rooms) {
+const randomDoor = function(rooms) {
   // select a random room from the rooms Array
   let roomIndex = randomInteger(0, rooms.length-1)
   let {x: rx, y: ry, w: rw, h: rh} = rooms[roomIndex]
@@ -142,14 +138,14 @@ let randomDoor = function(rooms) {
   return {drx, dry, roomIndex, wall}
 }
 
-let digDoor = function(bmp, {drx, dry}) {
+const digDoor = function(bmp, {drx, dry}) {
   //receives a bmp and a door object
   let newBmp = copyBitmap(bmp)
   newBmp[dry][drx] = 2
   return newBmp
 }
 
-let newCoord = function(drx, dry, direction, distance) {
+const newCoord = function(drx, dry, direction, distance) {
   let xx, yy
   switch (direction) {
     case 0:            //North
@@ -172,7 +168,7 @@ let newCoord = function(drx, dry, direction, distance) {
   return {x: xx, y: yy}
 }
 
-let randomTunnel = function(mapsize, dg, rooms, {drx, dry, wall}) {
+const randomTunnel = function(mapsize, dg, rooms, {drx, dry, wall}) {
   for (let i = 1; i <= 10; i++) {
     let coord = newCoord(drx, dry, wall, i)
     let {x, y} = coord
@@ -189,7 +185,7 @@ let randomTunnel = function(mapsize, dg, rooms, {drx, dry, wall}) {
   return {OK: false}
 }
 
-let digTunnel = function(bmp, length, {drx, dry, wall}) {
+const digTunnel = function(bmp, length, {drx, dry, wall}) {
   let newBmp = copyBitmap(bmp)
   for (let i = 1; i <= length; i++) {
     let coord = newCoord(drx, dry, wall, i)
@@ -199,7 +195,11 @@ let digTunnel = function(bmp, length, {drx, dry, wall}) {
   return newBmp
 }
 
-let createDungeon = function(size, numberOfRooms, numberOfTunnels) {
+export default function(size, numberOfRooms, numberOfTunnels) {
+  // TODO: implement additional exit criteria from the loop to make sure
+  // that it is not infinite. Currently, if you give too big number of
+  // rooms (numberOfRooms) or too big number of tunnels (numberOfTunnels)
+  // to be generated, the loop will never exit
   let rooms = []
   let nrRooms = 1
   let dg = zeroBitmap(size)
@@ -236,5 +236,3 @@ let createDungeon = function(size, numberOfRooms, numberOfTunnels) {
   }
   return dg
 }
-
-export default createDungeon(MAPSIZE, NUMBER_OF_ROOMS, NUMBER_OF_TUNNELS)

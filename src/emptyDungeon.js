@@ -11,7 +11,7 @@ const createEmptyBitmap = function(size) {
   return bmp
 }
 
-const copyBitmap = function(bmp) {
+export const copyBitmap = function(bmp) {
   return bmp.map(
     row => row.slice()
   )
@@ -27,7 +27,7 @@ const zeroBitmap = function(size) {
   return bmp
 }
 
-const randomInteger = (min, max) => Math.floor(
+export const randomInteger = (min, max) => Math.floor(
   Math.random() * (max - min + 1) + min
 )
 
@@ -195,7 +195,7 @@ const digTunnel = function(bmp, length, {drx, dry, wall}) {
   return newBmp
 }
 
-export default function(size, numberOfRooms, numberOfTunnels) {
+export const createDungeon = function(size, numberOfRooms, numberOfTunnels) {
   // TODO: implement additional exit criteria from the loop to make sure
   // that it is not infinite. Currently, if you give too big number of
   // rooms (numberOfRooms) or too big number of tunnels (numberOfTunnels)
@@ -203,6 +203,9 @@ export default function(size, numberOfRooms, numberOfTunnels) {
   let rooms = []
   let nrRooms = 1
   let dg = zeroBitmap(size)
+
+  // here we generate the first room randomly and all the other rooms are
+  // generated adjacent to an already existing room
   let firstRoom = randomRoom(size)
   rooms.push(firstRoom)
   dg = digRoom(dg, firstRoom)
@@ -218,7 +221,9 @@ export default function(size, numberOfRooms, numberOfTunnels) {
       nrRooms++
     }
   }
-  console.log(rooms)
+  //console.log(rooms)
+
+  // here we generate some tunnels between the rooms
   let nrTunnels = 0
   while (nrTunnels < numberOfTunnels) {
     let door = randomDoor(rooms)

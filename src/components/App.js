@@ -2,13 +2,38 @@ require('../../css/main.sass')
 import React from 'react'
 import Grid from './Grid'
 import Status from './Status'
+import {connect} from 'react-redux'
+import * as actionCreators from '../action_creators'
 
-let App = props => (
-  <div>
-    <h1>FCC Dungeon Crawler Game</h1>
-    <Status state={props.state}/>
-    <Grid cells={props.dungeon} />
-  </div>
-)
+class App extends React.Component{
+  constructor() {
+    super()
+    this.handleKeyPress = this.handleKeyPress.bind(this)
+  }
 
-export default App
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeyPress)
+  }
+
+  handleKeyPress(e) {
+    this.props.step(e)
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>FCC Dungeon Crawler Game</h1>
+        <Grid cells={this.props.dungeon} />
+      </div>
+    )
+  }
+}
+
+const mapStateToProps = function(state) {
+  return {
+    dungeon: state.get('dungeon'),
+    //player: state.get('player')
+  }
+}
+
+export const AppContainer = connect(mapStateToProps, actionCreators)(App)

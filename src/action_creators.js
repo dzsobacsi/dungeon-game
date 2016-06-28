@@ -38,6 +38,11 @@ export function step(key, plypos, dungeon) {
         type: 'POTION',
         dir: direction
       }
+    case 8:
+      return {
+        type: 'WEAPON',
+        dir: direction
+      }
     default:
       return {
         type: ''

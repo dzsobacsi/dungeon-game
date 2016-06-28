@@ -26,6 +26,9 @@ class App extends React.Component{
     this.props.enemies.forEach( e => {
       newDg[e.y][e.x] = 3
     })
+    this.props.potions.forEach( e => {
+      newDg[e.y][e.x] = 4
+    })
     newDg[this.props.player.position.y][this.props.player.position.x] = 5
     return newDg
   }

@@ -28,7 +28,8 @@ export function step(key, plypos, dungeon) {
 
   if (target === 1 || target === 2) {
     return {
-      type: 'STEP_'+direction
+      type: 'STEP',
+      dir: direction
     }
   }
   else return {

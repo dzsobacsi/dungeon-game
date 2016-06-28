@@ -26,14 +26,21 @@ export function step(key, plypos, dungeon) {
       break
   }
 
-  if (target === 1 || target === 2) {
-    return {
-      type: 'STEP',
-      dir: direction
-    }
+  switch(target) {
+    case 1:
+    case 2:
+      return {
+        type: 'STEP',
+        dir: direction
+      }
+    case 4:
+      return {
+        type: 'POTION',
+        dir: direction
+      }
+    default:
+      return {
+        type: ''
+      }
   }
-  else return {
-    type: ''
-  }
-
 }

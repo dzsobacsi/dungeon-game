@@ -4,40 +4,47 @@ function setState(state, newState) {
   return newState
 }
 
-function step(state, dir) {
-  let {x: px, y: py} = state.player.position
+function getNewPos(state, dir) {
+  let {x, y} = state.player.position
   let newPos = {}
   switch (dir) {
     case 'NORTH':
-      newPos.x = px
-      newPos.y = py-1
+      newPos.x = x
+      newPos.y = y-1
       break
     case 'EAST':
-      newPos.x = px+1
-      newPos.y = py
+      newPos.x = x+1
+      newPos.y = y
       break
     case 'SOUTH':
-      newPos.x = px
-      newPos.y = py+1
+      newPos.x = x
+      newPos.y = y+1
       break
     case 'WEST':
-      newPos.x = px-1
-      newPos.y = py
+      newPos.x = x-1
+      newPos.y = y
       break
   }
+  return newPos
+}
 
+function step(state, dir) {
   return Object.assign({}, state, {
     player: Object.assign({}, state.player, {
-      position: {
-        x: newPos.x,
-        y: newPos.y
-      }
+      position: getNewPos(state, dir)
     })
   })
 }
 
 function drinkPotion(state, dir) {
-  
+  let newPos = getNewPos(state, dir)
+  return Object.assign({}, state, {
+    potions: state.potions.filter( p => p.x !== newPos.x || p.y !== newPos.y),
+    player: Object.assign({}, state.player, {
+      health: state.player.health + state.potions.find( p => p.x === newPos.x && p.y === newPos.y).hp,
+      position: newPos
+    })
+  })
 }
 
 export default function(state = {}, action) {
@@ -46,6 +53,8 @@ export default function(state = {}, action) {
       return setState(state, action.state)
     case 'STEP':
       return step(state, action.dir)
+    case 'POTION':
+      return drinkPotion(state, action.dir)
   }
   return state
 }

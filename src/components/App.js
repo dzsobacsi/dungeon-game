@@ -4,11 +4,13 @@ import Grid from './Grid'
 import Status from './Status'
 import {connect} from 'react-redux'
 import * as actionCreators from '../action_creators'
+import {copyBitmap} from '../dungeon/emptyDungeon'
 
 class App extends React.Component{
   constructor() {
     super()
     this.handleKeyPress = this.handleKeyPress.bind(this)
+    this._dungeonToDraw = this._dungeonToDraw.bind(this)
   }
 
   componentDidMount() {
@@ -16,14 +18,24 @@ class App extends React.Component{
   }
 
   handleKeyPress(e) {
-    this.props.step(e)
+    this.props.step(e, this.props.player.position, this._dungeonToDraw())
+  }
+
+  _dungeonToDraw() {
+    let newDg = copyBitmap(this.props.dungeon)
+    this.props.enemies.forEach( e => {
+      newDg[e.y][e.x] = 3
+    })
+    newDg[this.props.player.position.y][this.props.player.position.x] = 5
+    return newDg
   }
 
   render() {
     return (
       <div>
         <h1>FCC Dungeon Crawler Game</h1>
-        <Grid cells={this.props.dungeon} />
+        <Status state={this.props} />
+        <Grid cells={this._dungeonToDraw()} />
       </div>
     )
   }
@@ -31,8 +43,13 @@ class App extends React.Component{
 
 const mapStateToProps = function(state) {
   return {
-    dungeon: state.get('dungeon'),
-    //player: state.get('player')
+    dungeon: state.dungeon,
+    enemies: state.enemies,
+    potions: state.potions,
+    player:  state.player,
+    exit:    state.exit,
+    boss:    state.boss,
+    weapons: state.weapons
   }
 }
 

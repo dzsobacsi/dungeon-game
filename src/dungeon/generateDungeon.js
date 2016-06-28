@@ -17,7 +17,7 @@ export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapon
   const weapons = weaponMap.list.map(obj => Object.assign({name: 'sword', attack: 20}, obj))
 
   return {
-    dungeon: boss.dungeon,
+    dungeon: emptyDungeon,
     enemies,
     potions,
     weapons,

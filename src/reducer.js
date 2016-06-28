@@ -47,6 +47,19 @@ function drinkPotion(state, dir) {
   })
 }
 
+function getWeapon(state, dir) {
+  let newPos = getNewPos(state, dir)
+  let newWeapon = state.weapons.find( w => w.x === newPos.x && w.y === newPos.y)
+  return Object.assign({}, state, {
+    weapons: state.weapons.filter( w => w.x !== newPos.x || w.y !== newPos.y),
+    player: Object.assign({}, state.player, {
+      attack: newWeapon.attack,
+      weapon: newWeapon.name,
+      position: newPos
+    })
+  })
+}
+
 export default function(state = {}, action) {
   switch (action.type) {
     case 'SET_STATE':
@@ -55,6 +68,8 @@ export default function(state = {}, action) {
       return step(state, action.dir)
     case 'POTION':
       return drinkPotion(state, action.dir)
+    case 'WEAPON':
+      return getWeapon(state, action.dir)
   }
   return state
 }

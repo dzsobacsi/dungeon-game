@@ -9,7 +9,7 @@ let Grid = props => {
       }
     )
   )
-  return <div>{cells}</div>
+  return <div className="grid">{cells}</div>
 }
 
 export default Grid

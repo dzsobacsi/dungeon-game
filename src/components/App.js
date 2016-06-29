@@ -40,8 +40,8 @@ class App extends React.Component{
     return (
       <div>
         <h1>FCC Dungeon Crawler Game</h1>
-        <Status state={this.props} />
         <Grid cells={this._dungeonToDraw()} />
+        <Status state={this.props} />
       </div>
     )
   }

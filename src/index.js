@@ -45,7 +45,8 @@ store.dispatch({
     enemies,
     potions,
     weapons,
-    exitPosition
+    exitPosition,
+    mapLevel: 1
   }
 })
 

@@ -48,8 +48,8 @@ function drinkPotion(state, dir) {
 }
 
 function getWeapon(state, dir) {
-  let newPos = getNewPos(state, dir)
-  let newWeapon = state.weapons.find( w => w.x === newPos.x && w.y === newPos.y)
+  const newPos = getNewPos(state, dir)
+  const newWeapon = state.weapons.find( w => w.x === newPos.x && w.y === newPos.y)
   return Object.assign({}, state, {
     weapons: state.weapons.filter( w => w.x !== newPos.x || w.y !== newPos.y),
     player: Object.assign({}, state.player, {
@@ -58,6 +58,36 @@ function getWeapon(state, dir) {
       position: newPos
     })
   })
+}
+
+function attack(state, dir) {
+  const newPos = getNewPos(state, dir)
+  let currentEnemy = state.enemies.find( e => e.x === newPos.x && e.y === newPos.y)
+  const otherEnemies = state.enemies.filter( e => e.x !== newPos.x || e.y !== newPos.y)
+  let damage = Math.floor((4*state.player.level + state.player.attack) * (2*Math.random() + 1))
+  damage = Math.min(damage, currentEnemy.hp)
+  currentEnemy.hp -= damage
+  console.log(currentEnemy)
+  if(currentEnemy.hp === 0) {           // enemy is defeated
+    return Object.assign({}, state, {
+      enemies: otherEnemies,
+      player: Object.assign({}, state.player, {
+        xp: state.player.xp + damage,
+        level: Math.floor((state.player.xp + damage) / 500) + 1,
+        position: newPos
+      })
+    })
+  }
+  else {                               // enemy remained alive and attacks back
+    return Object.assign({}, state, {
+      enemies: otherEnemies.concat(currentEnemy),
+      player: Object.assign({}, state.player, {
+        health: state.player.health - Math.floor(currentEnemy.attack * (Math.random() + 1)),
+        xp: state.player.xp + damage,
+        level: Math.floor((state.player.xp + damage) / 500) + 1
+      })
+    })
+  }
 }
 
 export default function(state = {}, action) {
@@ -70,6 +100,8 @@ export default function(state = {}, action) {
       return drinkPotion(state, action.dir)
     case 'WEAPON':
       return getWeapon(state, action.dir)
+    case 'ATTACK':
+      return attack(state, action.dir)
   }
   return state
 }

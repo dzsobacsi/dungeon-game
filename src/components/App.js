@@ -49,13 +49,14 @@ class App extends React.Component{
 
 const mapStateToProps = function(state) {
   return {
-    dungeon: state.dungeon,
-    enemies: state.enemies,
-    potions: state.potions,
-    player:  state.player,
-    exit:    state.exit,
-    boss:    state.boss,
-    weapons: state.weapons
+    dungeon:  state.dungeon,
+    enemies:  state.enemies,
+    potions:  state.potions,
+    player:   state.player,
+    exit:     state.exit,
+    boss:     state.boss,
+    weapons:  state.weapons,
+    mapLevel: state.mapLevel
   }
 }
 

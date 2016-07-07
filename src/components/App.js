@@ -56,7 +56,8 @@ const mapStateToProps = function(state) {
     exit:     state.exit,
     boss:     state.boss,
     weapons:  state.weapons,
-    mapLevel: state.mapLevel
+    mapLevel: state.mapLevel,
+    log:      state.log
   }
 }
 

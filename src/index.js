@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
 import generateDungeon from './dungeon/generateDungeon'
-import {Map} from 'immutable'
 import {createStore, compose} from 'redux'
 import {Provider} from 'react-redux'
 import reducer from './reducer'
@@ -46,7 +45,8 @@ store.dispatch({
     potions,
     weapons,
     exitPosition,
-    mapLevel: 1
+    mapLevel: 1,
+    log: []
   }
 })
 

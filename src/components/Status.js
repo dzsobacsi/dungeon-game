@@ -1,11 +1,12 @@
 import React from 'react'
 import Cell from './Cell'
+import Info from './Info'
 
 let Status = props => {
   const ply = props.state.player
   return (
     <div className="status">
-      <h3>Legend</h3>
+      <h3 id="legend-label">Legend</h3>
       <Cell type="type5" legend="legend-cell" /><span className="legend-span">You</span><br/>
       <Cell type="type3" legend="legend-cell" /><span className="legend-span">Enemy</span><br/>
       <Cell type="type4" legend="legend-cell" /><span className="legend-span">Health Potion</span><br/>
@@ -38,6 +39,7 @@ let Status = props => {
         </tbody>
       </table>
       <h3>Info</h3>
+      <Info log={props.state.log} />
     </div>
   )
 }

@@ -37,11 +37,13 @@ function step(state, dir) {
 }
 
 function drinkPotion(state, dir) {
-  let newPos = getNewPos(state, dir)
+  const newPos = getNewPos(state, dir)
+  const currentPotion = state.potions.find( p => p.x === newPos.x && p.y === newPos.y)
   return Object.assign({}, state, {
     potions: state.potions.filter( p => p.x !== newPos.x || p.y !== newPos.y),
+    log: state.log.concat(`You have drunk a health potion and gained ${currentPotion.hp} HP`),
     player: Object.assign({}, state.player, {
-      health: state.player.health + state.potions.find( p => p.x === newPos.x && p.y === newPos.y).hp,
+      health: state.player.health + currentPotion.hp,
       position: newPos
     })
   })
@@ -52,6 +54,7 @@ function getWeapon(state, dir) {
   const newWeapon = state.weapons.find( w => w.x === newPos.x && w.y === newPos.y)
   return Object.assign({}, state, {
     weapons: state.weapons.filter( w => w.x !== newPos.x || w.y !== newPos.y),
+    log: state.log.concat(`You have found a ${newWeapon.name}!`),
     player: Object.assign({}, state.player, {
       attack: newWeapon.attack,
       weapon: newWeapon.name,
@@ -67,24 +70,34 @@ function attack(state, dir) {
   let damage = Math.floor((4*state.player.level + state.player.attack) * (2*Math.random() + 1))
   damage = Math.min(damage, currentEnemy.hp)
   currentEnemy.hp -= damage
-  console.log(currentEnemy)
+  const newXp = state.player.xp + damage
+  const newLevel = Math.floor((state.player.xp + damage) / 500) + 1
   if(currentEnemy.hp === 0) {           // enemy is defeated
+    let logEntry = [`You have defeated you enemy!`, `You gained ${damage} XP`]
+    if(newLevel > state.player.level) logEntry.push('You reached a new level!')
     return Object.assign({}, state, {
       enemies: otherEnemies,
+      log: state.log.concat(logEntry),
       player: Object.assign({}, state.player, {
-        xp: state.player.xp + damage,
-        level: Math.floor((state.player.xp + damage) / 500) + 1,
+        xp: newXp,
+        level: newLevel,
         position: newPos
       })
     })
   }
   else {                               // enemy remained alive and attacks back
+    const counterDamage = Math.floor(currentEnemy.attack * (Math.random() + 1))
+    let logEntry = [`You attacked your enemy and caused ${damage} damage`,
+                    `Your enemy striked back and caused ${counterDamage} damage to you!`,
+                    `You gained ${damage} XP`]
+    if(newLevel > state.player.level) logEntry.push('You reached a new level!')
     return Object.assign({}, state, {
       enemies: otherEnemies.concat(currentEnemy),
+      log: state.log.concat(logEntry),
       player: Object.assign({}, state.player, {
-        health: state.player.health - Math.floor(currentEnemy.attack * (Math.random() + 1)),
-        xp: state.player.xp + damage,
-        level: Math.floor((state.player.xp + damage) / 500) + 1
+        health: state.player.health - counterDamage,
+        xp: newXp,
+        level: newLevel
       })
     })
   }

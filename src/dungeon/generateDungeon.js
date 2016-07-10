@@ -11,12 +11,13 @@ export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapon
   const weaponMap = thingsToDungeon(potionMap.dungeon, 8, nrweapons)
   const player    = thingsToDungeon(weaponMap.dungeon, 5, 1)
   const exit      = thingsToDungeon(player.dungeon, 6, nrexit)
-  const boss      = thingsToDungeon(exit.dungeon, 7, nrboss)
+  const bossMap   = thingsToDungeon(exit.dungeon, 7, nrboss)
 
   const enemies_hp = enemyMap.list.map(addHp.bind(this, 60))
   const enemies = enemies_hp.map(addAttack.bind(this, 10))
   const potions = potionMap.list.map(addHp.bind(this, 20))
   const weapons = weaponMap.list.map(obj => Object.assign({name: 'sword', attack: 20}, obj))
+  const boss    = bossMap.list.map(addHp.bind(this, 200))
 
   return {
     dungeon: emptyDungeon,
@@ -24,6 +25,7 @@ export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapon
     potions,
     weapons,
     playerPosition: player.list[0],
-    exitPosition: exit.list[0]
+    exitPosition: exit.list[0],
+    boss
   }
 }

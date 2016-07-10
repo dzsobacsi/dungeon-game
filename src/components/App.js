@@ -33,6 +33,12 @@ class App extends React.Component{
       newDg[e.y][e.x] = 8
     })
     newDg[this.props.player.position.y][this.props.player.position.x] = 5
+    if(this.props.exitPosition) {
+      newDg[this.props.exitPosition.y][this.props.exitPosition.x] = 6
+    }
+    if(this.props.boss) {
+      newDg[this.props.boss.position.y][this.props.boss.position.x] = 7
+    }
     return newDg
   }
 
@@ -49,15 +55,15 @@ class App extends React.Component{
 
 const mapStateToProps = function(state) {
   return {
-    dungeon:  state.dungeon,
-    enemies:  state.enemies,
-    potions:  state.potions,
-    player:   state.player,
-    exit:     state.exit,
-    boss:     state.boss,
-    weapons:  state.weapons,
-    mapLevel: state.mapLevel,
-    log:      state.log
+    dungeon:      state.dungeon,
+    enemies:      state.enemies,
+    potions:      state.potions,
+    player:       state.player,
+    exitPosition: state.exitPosition,
+    boss:         state.boss,
+    weapons:      state.weapons,
+    mapLevel:     state.mapLevel,
+    log:          state.log
   }
 }
 

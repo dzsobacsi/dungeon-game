@@ -1,4 +1,4 @@
-//import {Map} from 'immutable';
+import generateDungeon from './dungeon/generateDungeon'
 
 function setState(state, newState) {
   return newState
@@ -28,7 +28,9 @@ function getNewPos(state, dir) {
   return newPos
 }
 
-function step(state, dir) {
+// Lesson learned: keeping the state flat helps avoid this ugly
+// nested Object.assing() structure
+ function step(state, dir) {
   return Object.assign({}, state, {
     player: Object.assign({}, state.player, {
       position: getNewPos(state, dir)
@@ -103,6 +105,38 @@ function attack(state, dir) {
   }
 }
 
+function exit(state) {
+  let nrExit = state.mapLevel < 3 ? 1 : 0
+  let nrBoss = 1 - nrExit
+  let {dungeon, enemies, potions, weapons, playerPosition, exitPosition} = generateDungeon(
+    state.MAPSIZE,
+    state.NUMBER_OF_ROOMS,
+    state.NUMBER_OF_TUNNELS,
+    state.NUMBER_OF_ENEMIES,
+    state.NUMBER_OF_POTIONS,
+    state.NUMBER_OF_WEAPONS,
+    nrExit,
+    nrBoss
+  )
+  let logEntry = [
+    `You reached map level ${state.mapLevel+1}!`,
+    'You gained 100 XP!'
+  ]
+  return Object.assign({}, state, {
+    dungeon,
+    enemies,
+    potions,
+    weapons,
+    exitPosition,
+    mapLevel: state.mapLevel + 1,
+    log: state.log.concat(logEntry),
+    player: Object.assign({}, state.player, {
+      xp: state.player.xp + 100,
+      position: playerPosition
+    })
+  })
+}
+
 export default function(state = {}, action) {
   switch (action.type) {
     case 'SET_STATE':
@@ -115,6 +149,8 @@ export default function(state = {}, action) {
       return getWeapon(state, action.dir)
     case 'ATTACK':
       return attack(state, action.dir)
+    case 'EXIT':
+      return exit(state)
   }
   return state
 }

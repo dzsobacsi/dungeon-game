@@ -46,7 +46,13 @@ store.dispatch({
     weapons,
     exitPosition,
     mapLevel: 1,
-    log: []
+    log: [],
+    MAPSIZE,
+    NUMBER_OF_ROOMS,
+    NUMBER_OF_TUNNELS,
+    NUMBER_OF_ENEMIES,
+    NUMBER_OF_POTIONS,
+    NUMBER_OF_WEAPONS
   }
 })
 

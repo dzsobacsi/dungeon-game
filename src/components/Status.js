@@ -36,6 +36,10 @@ let Status = props => {
             <td>Level</td>
             <td>{ply.level}</td>
           </tr>
+          <tr>
+            <td>Map level</td>
+            <td>{props.state.mapLevel}</td>
+          </tr>
         </tbody>
       </table>
       <h3>Info</h3>

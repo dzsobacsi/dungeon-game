@@ -19,7 +19,7 @@ const createStoreDevTools = compose(
 )(createStore);
 const store = createStoreDevTools(reducer);
 
-let {dungeon, enemies, potions, weapons, playerPosition, exitPosition} = generateDungeon(
+let {dungeon, enemies, potions, weapons, playerPosition, exitPosition, boss} = generateDungeon(
   MAPSIZE,
   NUMBER_OF_ROOMS,
   NUMBER_OF_TUNNELS,
@@ -45,6 +45,7 @@ store.dispatch({
     potions,
     weapons,
     exitPosition,
+    boss,
     mapLevel: 1,
     log: [],
     MAPSIZE,

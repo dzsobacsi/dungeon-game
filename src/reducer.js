@@ -108,7 +108,7 @@ function attack(state, dir) {
 function exit(state) {
   let nrExit = state.mapLevel < 3 ? 1 : 0
   let nrBoss = 1 - nrExit
-  let {dungeon, enemies, potions, weapons, playerPosition, exitPosition} = generateDungeon(
+  let {dungeon, enemies, potions, weapons, playerPosition, exitPosition, boss} = generateDungeon(
     state.MAPSIZE,
     state.NUMBER_OF_ROOMS,
     state.NUMBER_OF_TUNNELS,
@@ -128,6 +128,7 @@ function exit(state) {
     potions,
     weapons,
     exitPosition,
+    boss,
     mapLevel: state.mapLevel + 1,
     log: state.log.concat(logEntry),
     player: Object.assign({}, state.player, {

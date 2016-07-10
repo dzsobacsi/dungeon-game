@@ -26,6 +26,6 @@ export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapon
     weapons,
     playerPosition: player.list[0],
     exitPosition: exit.list[0],
-    boss
+    boss: boss[0]
   }
 }

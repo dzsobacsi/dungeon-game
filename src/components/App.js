@@ -37,7 +37,7 @@ class App extends React.Component{
       newDg[this.props.exitPosition.y][this.props.exitPosition.x] = 6
     }
     if(this.props.boss) {
-      newDg[this.props.boss.position.y][this.props.boss.position.x] = 7
+      newDg[this.props.boss.y][this.props.boss.x] = 7
     }
     return newDg
   }

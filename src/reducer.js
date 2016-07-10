@@ -73,9 +73,9 @@ function attack(state, dir) {
   damage = Math.min(damage, currentEnemy.hp)
   currentEnemy.hp -= damage
   const newXp = state.player.tempXp + damage
-  const newLevel = Math.floor((state.player.xp + damage) / 500) + 1
   if(currentEnemy.hp === 0) {           // enemy is defeated
-    let logEntry = [`You have defeated you enemy!`, `You gained ${newXp} XP`]
+    let logEntry = [`You have defeated your enemy!`, `You gained ${newXp} XP`]
+    const newLevel = Math.floor((state.player.xp + newXp) / 250) + 1
     if(newLevel > state.player.level) logEntry.push('You reached a new level!')
     return Object.assign({}, state, {
       enemies: otherEnemies,
@@ -92,14 +92,12 @@ function attack(state, dir) {
     const counterDamage = Math.floor(currentEnemy.attack * (Math.random() + 1))
     let logEntry = [`You attacked your enemy and caused ${damage} damage`,
                     `Your enemy striked back and caused ${counterDamage} damage to you!`]
-    if(newLevel > state.player.level) logEntry.push('You reached a new level!')
     return Object.assign({}, state, {
       enemies: otherEnemies.concat(currentEnemy),
       log: logEntry,
       player: Object.assign({}, state.player, {
         health: state.player.health - counterDamage,
         tempXp: newXp,
-        level: newLevel
       })
     })
   }
@@ -115,13 +113,11 @@ function exit(state) {
     state.NUMBER_OF_ENEMIES,
     state.NUMBER_OF_POTIONS,
     state.NUMBER_OF_WEAPONS,
+    state.mapLevel + 1,
     nrExit,
     nrBoss
   )
-  let logEntry = [
-    `You reached map level ${state.mapLevel+1}!`,
-    'You gained 100 XP!'
-  ]
+  let logEntry = [`You reached map level ${state.mapLevel+1}!`]
   return Object.assign({}, state, {
     dungeon,
     enemies,
@@ -130,9 +126,8 @@ function exit(state) {
     exitPosition,
     boss,
     mapLevel: state.mapLevel + 1,
-    log: state.log.concat(logEntry),
+    log: logEntry,
     player: Object.assign({}, state.player, {
-      xp: state.player.xp + 100,
       position: playerPosition
     })
   })

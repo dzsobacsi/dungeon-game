@@ -67,27 +67,40 @@ function getWeapon(state, dir) {
 
 function attack(state, dir) {
   const newPos = getNewPos(state, dir)
+  let fightAgainstTheBoss = false
   let currentEnemy = state.enemies.find( e => e.x === newPos.x && e.y === newPos.y)
+  if (!currentEnemy) {
+    currentEnemy = state.boss
+    fightAgainstTheBoss = true
+  }
   const otherEnemies = state.enemies.filter( e => e.x !== newPos.x || e.y !== newPos.y)
   let damage = Math.floor((4*state.player.level + state.player.attack) * (1.8*Math.random() + 0.5))
   damage = Math.min(damage, currentEnemy.hp)
   currentEnemy.hp -= damage
   const newXp = state.player.tempXp + damage
   if(currentEnemy.hp === 0) {           // enemy is defeated
-    let logEntry = [`You have defeated your enemy!`, `You gained ${newXp} XP`]
+    let logEntry = fightAgainstTheBoss ?
+      ['You defeated the Boss and win the game!', 'Congratulations'] :
+      [`You have defeated your enemy!`, `You gained ${newXp} XP`]
     const newLevel = Math.floor((state.player.xp + newXp) / 300) + 1
     if(newLevel > state.player.level) logEntry.push('You reached a new level!')
-    return Object.assign({}, state, {
-      enemies: otherEnemies,
-      log: logEntry,
-      player: Object.assign({}, state.player, {
-        tempXp: 0,
-        xp: state.player.xp + newXp,
-        level: newLevel,
-        maxHp: 80+20*newLevel,
-        position: newPos
+    if (!fightAgainstTheBoss) {
+      return Object.assign({}, state, {
+        enemies: otherEnemies,
+        log: logEntry,
+        player: Object.assign({}, state.player, {
+          tempXp: 0,
+          xp: state.player.xp + newXp,
+          level: newLevel,
+          maxHp: 80+20*newLevel,
+          position: newPos
+        })
       })
-    })
+    }
+    else {                            // Boss dies, Player wins
+      alert("You win!\nCongratulations!")
+      return newGame(state)
+    }
   }
   else {                               // enemy survives and attacks back
     let counterDamage = Math.floor(currentEnemy.attack * (Math.random() + 1))
@@ -97,7 +110,8 @@ function attack(state, dir) {
       let logEntry = [`You attacked your enemy and caused ${damage} damage`,
                       `Your enemy striked back and caused ${counterDamage} damage to you!`]
       return Object.assign({}, state, {
-        enemies: otherEnemies.concat(currentEnemy),
+        enemies: fightAgainstTheBoss ? state.enemies : otherEnemies.concat(currentEnemy),
+        boss: fightAgainstTheBoss ? currentEnemy : state.boss,
         log: logEntry,
         player: Object.assign({}, state.player, {
           health: playerNewHealth,

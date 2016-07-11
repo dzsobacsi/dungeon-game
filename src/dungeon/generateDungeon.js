@@ -34,8 +34,8 @@ export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapon
   const enemies = enemies_hp.map(addAttack.bind(this, 5+6*maplevel))
   const potions = potionMap.list.map(addHp.bind(this, 10+10*maplevel))
   const weapons = weaponMap.list.map((obj, i) => Object.assign(weaponList[i], obj))
-  const boss_hp = bossMap.list.map(addHp.bind(this, 300))
-  const boss    = boss_hp.map(addAttack.bind(this, 35))
+  const boss_hp = bossMap.list.map(addHp.bind(this, 700))
+  const boss    = boss_hp.map(addAttack.bind(this, 50))
 
   return {
     dungeon: emptyDungeon,

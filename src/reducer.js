@@ -89,25 +89,65 @@ function attack(state, dir) {
       })
     })
   }
-  else {                               // enemy remained alive and attacks back
-    const counterDamage = Math.floor(currentEnemy.attack * (Math.random() + 1))
-    let logEntry = [`You attacked your enemy and caused ${damage} damage`,
-                    `Your enemy striked back and caused ${counterDamage} damage to you!`]
-    return Object.assign({}, state, {
-      enemies: otherEnemies.concat(currentEnemy),
-      log: logEntry,
-      player: Object.assign({}, state.player, {
-        health: state.player.health - counterDamage,
-        tempXp: newXp,
+  else {                               // enemy survives and attacks back
+    let counterDamage = Math.floor(currentEnemy.attack * (Math.random() + 1))
+    counterDamage = Math.min(counterDamage, state.player.health)
+    const playerNewHealth = state.player.health - counterDamage
+    if (playerNewHealth > 0) {
+      let logEntry = [`You attacked your enemy and caused ${damage} damage`,
+                      `Your enemy striked back and caused ${counterDamage} damage to you!`]
+      return Object.assign({}, state, {
+        enemies: otherEnemies.concat(currentEnemy),
+        log: logEntry,
+        player: Object.assign({}, state.player, {
+          health: playerNewHealth,
+          tempXp: newXp,
+        })
       })
-    })
+    }
+    else {                            // player died
+      alert("You died!\nBetter luck next time!")
+      return newGame(state)
+    }
   }
 }
 
+function newGame(state) {
+  const {dungeon, enemies, potions, weapons, playerPosition, exitPosition, boss} = generateDungeon(
+    state.MAPSIZE,
+    state.NUMBER_OF_ROOMS,
+    state.NUMBER_OF_TUNNELS,
+    state.NUMBER_OF_ENEMIES,
+    state.NUMBER_OF_POTIONS,
+    state.NUMBER_OF_WEAPONS
+  )
+  const logEntry = ['A new game started']
+  return Object.assign({}, state, {
+    dungeon,
+    enemies,
+    potions,
+    weapons,
+    exitPosition,
+    boss,
+    mapLevel: 1,
+    log: logEntry,
+    player: {
+      health: 100,
+      maxHp: 100,
+      weapon: "stick",
+      attack: 5,
+      level: 1,
+      tempXp: 0,
+      xp: 0,
+      position: playerPosition
+    }
+  })
+}
+
 function exit(state) {
-  let nrExit = state.mapLevel < 3 ? 1 : 0
-  let nrBoss = 1 - nrExit
-  let {dungeon, enemies, potions, weapons, playerPosition, exitPosition, boss} = generateDungeon(
+  const nrExit = state.mapLevel < 3 ? 1 : 0
+  const nrBoss = 1 - nrExit
+  const {dungeon, enemies, potions, weapons, playerPosition, exitPosition, boss} = generateDungeon(
     state.MAPSIZE,
     state.NUMBER_OF_ROOMS,
     state.NUMBER_OF_TUNNELS,
@@ -118,7 +158,7 @@ function exit(state) {
     nrExit,
     nrBoss
   )
-  let logEntry = [`You reached map level ${state.mapLevel+1}!`]
+  const logEntry = state.mapLevel > 0 ? [`You reached map level ${state.mapLevel+1}!`] : []
   return Object.assign({}, state, {
     dungeon,
     enemies,

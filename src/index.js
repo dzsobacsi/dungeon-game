@@ -33,6 +33,7 @@ store.dispatch({
   state: {
     player: {
       health: 100,
+      maxHp: 100,
       weapon: "stick",
       attack: 5,
       level: 1,

@@ -18,7 +18,7 @@ let Status = props => {
         <tbody>
           <tr>
             <td>Health</td>
-            <td>{ply.health}</td>
+            <td>{ply.health}/{ply.maxHp}</td>
           </tr>
           <tr>
             <td>Weapon</td>

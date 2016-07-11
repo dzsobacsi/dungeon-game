@@ -45,7 +45,7 @@ function drinkPotion(state, dir) {
     potions: state.potions.filter( p => p.x !== newPos.x || p.y !== newPos.y),
     log: [`You found a health potion and gained ${currentPotion.hp} HP`],
     player: Object.assign({}, state.player, {
-      health: state.player.health + currentPotion.hp,
+      health: Math.min(state.player.health + currentPotion.hp, state.player.maxHp),
       position: newPos
     })
   })
@@ -69,13 +69,13 @@ function attack(state, dir) {
   const newPos = getNewPos(state, dir)
   let currentEnemy = state.enemies.find( e => e.x === newPos.x && e.y === newPos.y)
   const otherEnemies = state.enemies.filter( e => e.x !== newPos.x || e.y !== newPos.y)
-  let damage = Math.floor((4*state.player.level + state.player.attack) * (2*Math.random() + 1))
+  let damage = Math.floor((4*state.player.level + state.player.attack) * (1.8*Math.random() + 0.5))
   damage = Math.min(damage, currentEnemy.hp)
   currentEnemy.hp -= damage
   const newXp = state.player.tempXp + damage
   if(currentEnemy.hp === 0) {           // enemy is defeated
     let logEntry = [`You have defeated your enemy!`, `You gained ${newXp} XP`]
-    const newLevel = Math.floor((state.player.xp + newXp) / 250) + 1
+    const newLevel = Math.floor((state.player.xp + newXp) / 300) + 1
     if(newLevel > state.player.level) logEntry.push('You reached a new level!')
     return Object.assign({}, state, {
       enemies: otherEnemies,
@@ -84,6 +84,7 @@ function attack(state, dir) {
         tempXp: 0,
         xp: state.player.xp + newXp,
         level: newLevel,
+        maxHp: 80+20*newLevel,
         position: newPos
       })
     })

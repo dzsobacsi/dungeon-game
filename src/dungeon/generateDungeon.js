@@ -5,6 +5,23 @@ const addHp = (hp, obj) => Object.assign({hp}, obj)
 const addAttack = (attack, obj) => Object.assign({attack}, obj)
 
 export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapons, maplevel=1, nrexit=1, nrboss=0) {
+  const weaponList = [
+    {level: 1, name: 'dagger', attack: 10},
+    {level: 1, name: 'axe', attack: 14},
+    {level: 1, name: 'sword', attack: 18},
+    {level: 2, name: 'pistol', attack: 22},
+    {level: 2, name: 'riffle', attack: 26},
+    {level: 2, name: 'shotgun', attack: 30},
+    {level: 3, name: 'machinegun', attack: 34},
+    {level: 3, name: 'hand granade', attack: 38},
+    {level: 3, name: 'bazooka', attack: 42},
+    {level: 4, name: 'laser gun', attack: 46},
+    {level: 4, name: 'plasma gun', attack: 50},
+    {level: 4, name: 'dark matter gun', attack: 54}
+  ].filter(w => w.level === maplevel)
+
+  const enemyHP = [0, 50, 70, 100, 150]
+
   const emptyDungeon = createDungeon(size, nrrooms, nrtunnels)
   const enemyMap  = thingsToDungeon(emptyDungeon, 3, nrenemies)
   const potionMap = thingsToDungeon(enemyMap.dungeon, 4, nrpotions)
@@ -13,11 +30,11 @@ export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapon
   const exit      = thingsToDungeon(player.dungeon, 6, nrexit)
   const bossMap   = thingsToDungeon(exit.dungeon, 7, nrboss)
 
-  const enemies_hp = enemyMap.list.map(addHp.bind(this, 30+20*maplevel))
-  const enemies = enemies_hp.map(addAttack.bind(this, 5+5*maplevel))
+  const enemies_hp = enemyMap.list.map(addHp.bind(this, enemyHP[maplevel]))
+  const enemies = enemies_hp.map(addAttack.bind(this, 5+6*maplevel))
   const potions = potionMap.list.map(addHp.bind(this, 10+10*maplevel))
-  const weapons = weaponMap.list.map(obj => Object.assign({name: 'sword', attack: 20}, obj))
-  const boss_hp = bossMap.list.map(addHp.bind(this, 200))
+  const weapons = weaponMap.list.map((obj, i) => Object.assign(weaponList[i], obj))
+  const boss_hp = bossMap.list.map(addHp.bind(this, 300))
   const boss    = boss_hp.map(addAttack.bind(this, 35))
 
   return {

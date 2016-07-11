@@ -17,10 +17,10 @@ export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapon
     {level: 3, name: 'bazooka', attack: 42},
     {level: 4, name: 'laser gun', attack: 46},
     {level: 4, name: 'plasma gun', attack: 50},
-    {level: 4, name: 'dark matter gun', attack: 54}
+    {level: 4, name: 'antimatter gun', attack: 54}
   ].filter(w => w.level === maplevel)
 
-  const enemyHP = [0, 50, 70, 100, 150]
+  const enemyHP = [0, 45, 75, 110, 150]
 
   const emptyDungeon = createDungeon(size, nrrooms, nrtunnels)
   const enemyMap  = thingsToDungeon(emptyDungeon, 3, nrenemies)
@@ -34,7 +34,7 @@ export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapon
   const enemies = enemies_hp.map(addAttack.bind(this, 5+6*maplevel))
   const potions = potionMap.list.map(addHp.bind(this, 10+10*maplevel))
   const weapons = weaponMap.list.map((obj, i) => Object.assign(weaponList[i], obj))
-  const boss_hp = bossMap.list.map(addHp.bind(this, 700))
+  const boss_hp = bossMap.list.map(addHp.bind(this, 600))
   const boss    = boss_hp.map(addAttack.bind(this, 50))
 
   return {

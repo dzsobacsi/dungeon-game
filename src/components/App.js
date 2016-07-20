@@ -10,6 +10,7 @@ class App extends React.Component{
   constructor() {
     super()
     this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.handleClick = this.handleClick.bind(this)
     this._dungeonToDraw = this._dungeonToDraw.bind(this)
   }
 
@@ -42,12 +43,17 @@ class App extends React.Component{
     return newDg
   }
 
+  handleClick() {
+    this.props.lampSwitch()
+  }
+
   render() {
     return (
       <div>
         <h1>FCC Dungeon Crawler Game</h1>
+        <p>Kill the Boss on level 4!</p>
         <Grid cells={this._dungeonToDraw()} />
-        <Status state={this.props} />
+        <Status state={this.props} click={this.handleClick}/>
       </div>
     )
   }

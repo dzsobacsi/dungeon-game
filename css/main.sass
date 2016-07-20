@@ -1,10 +1,23 @@
-$cell-size: .8em
+$cell-size: 13px
 $grid-size: 50   // this should be the same as MAPSIZE in index.js
+$lamp-url: "https://lh4.googleusercontent.com/-katLGTSCm2Q/UJC0_N7XCrI/AAAAAAAABq0/6GxNfNW-Ra4/s300/lightbulb.png"
+$status-size: 200px
+$text-color: #89D2DC
+$bg-color: #0D1516
 
 *
   box-sizing: border-box
 
-// #app
+body
+  background-color: $bg-color
+
+#app
+  width: $cell-size * $grid-size + $status-size + 100px
+  display: block
+  margin: auto
+
+h1 + p
+  margin-bottom: 40px
 
 .grid
   float: left
@@ -12,13 +25,15 @@ $grid-size: 50   // this should be the same as MAPSIZE in index.js
   height: $cell-size * $grid-size
   display: inline-block
 
-h3
+h1, h3, span, td, p
   -webkit-margin-after: 0.5em
+  text-align: center
+  color: $text-color
 
 .status
   display: inline-block
   margin-left: 50px
-  width: 200px
+  width: $status-size
   height: $cell-size * $grid-size
 
   #legend-label
@@ -32,6 +47,7 @@ h3
 
   td
     padding: 2px 6px
+    text-align: left
 
 .info-box
   width: 200px
@@ -40,8 +56,17 @@ h3
   border: 1px black solid
 
 .msg
-  margin: 0
+  margin: 0 0 0 0
+  text-align: left
+  color: $text-color
 
+.lamp
+  width: 150px
+  height: 150px
+  margin: 35px auto
+  display: block
+  background: url($lamp-url) no-repeat
+  background-position: -150px 0
 
 .cell
   float: left

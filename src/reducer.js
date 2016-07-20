@@ -188,6 +188,10 @@ function exit(state) {
   })
 }
 
+function switchLamp(state) {
+  return Object.assign({}, state, {darkness: 1 - state.darkness})
+}
+
 export default function(state = {}, action) {
   switch (action.type) {
     case 'SET_STATE':
@@ -202,6 +206,8 @@ export default function(state = {}, action) {
       return attack(state, action.dir)
     case 'EXIT':
       return exit(state)
+    case 'LAMP':
+      return switchLamp(state)
   }
   return state
 }

@@ -59,3 +59,9 @@ export function step(key, plypos, dungeon) {
       }
   }
 }
+
+export function lampSwitch() {
+  return {
+    type: 'LAMP'
+  }
+}

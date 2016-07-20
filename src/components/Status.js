@@ -1,6 +1,7 @@
 import React from 'react'
 import Cell from './Cell'
 import Info from './Info'
+import Lamp from './Lamp'
 
 let Status = props => {
   const ply = props.state.player
@@ -18,7 +19,7 @@ let Status = props => {
         <tbody>
           <tr>
             <td>Health</td>
-            <td>{ply.health}/{ply.maxHp}</td>
+            <td>{ply.health} / {ply.maxHp}</td>
           </tr>
           <tr>
             <td>Weapon</td>
@@ -44,6 +45,7 @@ let Status = props => {
       </table>
       <h3>Info</h3>
       <Info log={props.state.log} />
+      <Lamp click={props.click} />
     </div>
   )
 }

@@ -37,7 +37,6 @@ store.dispatch({
       weapon: "stick",
       attack: 5,
       level: 1,
-      tempXp: 0,
       xp: 0,
       position: playerPosition
     },

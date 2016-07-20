@@ -77,7 +77,7 @@ function attack(state, dir) {
   let damage = Math.floor((4*state.player.level + state.player.attack) * (1.8*Math.random() + 0.5))
   damage = Math.min(damage, currentEnemy.hp)
   currentEnemy.hp -= damage
-  const newXp = state.player.tempXp + damage
+  const newXp = currentEnemy.originalHP
   if(currentEnemy.hp === 0) {           // enemy is defeated
     let logEntry = [`You have defeated your enemy!`, `You gained ${newXp} XP`]
     const newLevel = Math.floor((state.player.xp + newXp) / 300) + 1
@@ -87,7 +87,6 @@ function attack(state, dir) {
         enemies: otherEnemies,
         log: logEntry,
         player: Object.assign({}, state.player, {
-          tempXp: 0,
           xp: state.player.xp + newXp,
           level: newLevel,
           maxHp: 80+20*newLevel,
@@ -112,8 +111,7 @@ function attack(state, dir) {
         boss: fightAgainstTheBoss ? currentEnemy : state.boss,
         log: logEntry,
         player: Object.assign({}, state.player, {
-          health: playerNewHealth,
-          tempXp: newXp,
+          health: playerNewHealth
         })
       })
     }
@@ -149,7 +147,6 @@ function newGame(state) {
       weapon: "stick",
       attack: 5,
       level: 1,
-      tempXp: 0,
       xp: 0,
       position: playerPosition
     }

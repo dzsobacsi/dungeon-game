@@ -1,7 +1,7 @@
 import {createDungeon} from './emptyDungeon'
 import thingsToDungeon from './thingsToDungeon'
 
-const addHp = (hp, obj) => Object.assign({hp}, obj)
+const addHp = (hp, obj) => Object.assign({hp, originalHP: hp}, obj)
 const addAttack = (attack, obj) => Object.assign({attack}, obj)
 
 export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapons, maplevel=1, nrexit=1, nrboss=0) {

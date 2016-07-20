@@ -5,7 +5,8 @@ Live demo is available [here](http://codepen.io/dzsobacsi/full/xOWRby/)
 
 ## Features
 * Random generated map
-* You can move through the map discovering items.
+* You can move through the map discovering items
+* You can walk around with the arrow keys or with A, W, S, D keys
 * All area of the map can be discovered
 * The map has 4 levels
 * Objects on the map are placed at random

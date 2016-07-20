@@ -20,7 +20,7 @@ class App extends React.Component{
   }
 
   handleKeyPress(e) {
-    this.props.step(e, this.props.player.position, this._dungeonForActionCreator())
+    this.props.stepActions(e, this.props.player.position, this._dungeonForActionCreator())
   }
 
   _dungeonForActionCreator() {

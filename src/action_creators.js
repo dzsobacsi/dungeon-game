@@ -1,4 +1,4 @@
-export function step(key, plypos, dungeon) {
+export function stepActions(key, plypos, dungeon) {
   let {x: plx, y: ply} = plypos
   let target
   let direction

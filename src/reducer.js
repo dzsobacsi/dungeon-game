@@ -79,9 +79,7 @@ function attack(state, dir) {
   currentEnemy.hp -= damage
   const newXp = state.player.tempXp + damage
   if(currentEnemy.hp === 0) {           // enemy is defeated
-    let logEntry = fightAgainstTheBoss ?
-      ['You defeated the Boss and win the game!', 'Congratulations'] :
-      [`You have defeated your enemy!`, `You gained ${newXp} XP`]
+    let logEntry = [`You have defeated your enemy!`, `You gained ${newXp} XP`]
     const newLevel = Math.floor((state.player.xp + newXp) / 300) + 1
     if(newLevel > state.player.level) logEntry.push('You reached a new level!')
     if (!fightAgainstTheBoss) {

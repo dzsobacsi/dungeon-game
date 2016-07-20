@@ -11,6 +11,7 @@ class App extends React.Component{
     super()
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    this._dungeonForActionCreator = this._dungeonForActionCreator.bind(this)
     this._dungeonToDraw = this._dungeonToDraw.bind(this)
   }
 
@@ -19,10 +20,10 @@ class App extends React.Component{
   }
 
   handleKeyPress(e) {
-    this.props.step(e, this.props.player.position, this._dungeonToDraw())
+    this.props.step(e, this.props.player.position, this._dungeonForActionCreator())
   }
 
-  _dungeonToDraw() {
+  _dungeonForActionCreator() {
     let newDg = copyBitmap(this.props.dungeon)
     this.props.enemies.forEach( e => {
       newDg[e.y][e.x] = 3
@@ -41,6 +42,26 @@ class App extends React.Component{
       newDg[this.props.boss.y][this.props.boss.x] = 7
     }
     return newDg
+  }
+
+  _dungeonToDraw() {
+    const distanceFromPlayer = function(x, y, px, py) {
+      const sq = x => x*x
+      return Math.round(Math.sqrt(sq(px-x) + sq(py-y)))
+    }
+    const size = this.props.MAPSIZE
+    const px = this.props.player.position.x
+    const py = this.props.player.position.y
+
+    let dgToDraw = this._dungeonForActionCreator()
+    if (this.props.darkness) {
+      for(let i=0; i<size; i++) {
+        for (let j=0; j<size; j++) {
+          if (distanceFromPlayer(i, j, px, py) > 8) dgToDraw[j][i] = 0
+        }
+      }
+    }
+    return dgToDraw
   }
 
   handleClick() {
@@ -62,6 +83,8 @@ class App extends React.Component{
 const mapStateToProps = function(state) {
   return {
     dungeon:      state.dungeon,
+    darkness:     state.darkness,
+    MAPSIZE:      state.MAPSIZE,
     enemies:      state.enemies,
     potions:      state.potions,
     player:       state.player,

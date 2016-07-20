@@ -42,7 +42,7 @@ store.dispatch({
       position: playerPosition
     },
     dungeon,
-    darkness: 0,
+    darkness: 1,
     enemies,
     potions,
     weapons,

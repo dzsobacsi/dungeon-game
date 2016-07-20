@@ -189,6 +189,7 @@ function exit(state) {
 }
 
 function switchLamp(state) {
+  document.getElementById("lamp").classList.toggle("lamp-on")
   return Object.assign({}, state, {darkness: 1 - state.darkness})
 }
 

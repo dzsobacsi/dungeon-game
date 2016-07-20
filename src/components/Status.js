@@ -45,7 +45,7 @@ let Status = props => {
       </table>
       <h3>Info</h3>
       <Info log={props.state.log} />
-      <Lamp click={props.click} />
+      <Lamp on={1 - props.state.darkness} click={props.click} />
     </div>
   )
 }

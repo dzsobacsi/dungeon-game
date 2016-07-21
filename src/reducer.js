@@ -41,11 +41,13 @@ function getNewPos(state, dir) {
 function drinkPotion(state, dir) {
   const newPos = getNewPos(state, dir)
   const currentPotion = state.potions.find( p => p.x === newPos.x && p.y === newPos.y)
+  const gainedHp = Math.min(currentPotion.hp, state.player.maxHp - state.player.health)
+  if (state.player.health === state.player.maxHp) return state
   return Object.assign({}, state, {
     potions: state.potions.filter( p => p.x !== newPos.x || p.y !== newPos.y),
-    log: [`You found a health potion and gained ${currentPotion.hp} HP`],
+    log: [`You found a health potion and gained ${gainedHp} HP`],
     player: Object.assign({}, state.player, {
-      health: Math.min(state.player.health + currentPotion.hp, state.player.maxHp),
+      health: state.player.health + gainedHp,
       position: newPos
     })
   })

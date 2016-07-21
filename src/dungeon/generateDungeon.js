@@ -10,7 +10,7 @@ export default function(size, nrrooms, nrtunnels, nrenemies, nrpotions, nrweapon
     {level: 1, name: 'axe', attack: 14},
     {level: 1, name: 'sword', attack: 18},
     {level: 2, name: 'pistol', attack: 22},
-    {level: 2, name: 'riffle', attack: 26},
+    {level: 2, name: 'rifle', attack: 26},
     {level: 2, name: 'shotgun', attack: 30},
     {level: 3, name: 'machinegun', attack: 34},
     {level: 3, name: 'hand granade', attack: 38},

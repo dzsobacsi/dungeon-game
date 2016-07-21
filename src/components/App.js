@@ -57,7 +57,7 @@ class App extends React.Component{
     if (this.props.darkness) {
       for(let i=0; i<size; i++) {
         for (let j=0; j<size; j++) {
-          if (distanceFromPlayer(i, j, px, py) > 8) dgToDraw[j][i] = 0
+          if (distanceFromPlayer(i, j, px, py) > 8) dgToDraw[j][i] = 9
         }
       }
     }
